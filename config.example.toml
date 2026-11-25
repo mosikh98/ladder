@@ -1,0 +1,66 @@
+# Copy to config.toml and edit. Seconds are the budget of each Psiphon method
+# before the next one is tried. Pin one method with psiphon.pinned, or leave
+# it empty for the automatic ladder.
+
+[budgets]
+# Domain fronting (CDN edge, no Psiphon address on the wire).
+A = 60
+# Same fronting, but only the clean edge IPs this scanner proved.
+E = 45
+# Every protocol, straight to Psiphon's own servers.
+D = 45
+# Conduit: volunteer relays over WebRTC.
+C = 75
+# Personal Conduit station. Only used when pinned.
+P = 90
+# One upstream HTTP/SOCKS5 proxy. Per proxy, then the ladder if none carry.
+X = 45
+
+[psiphon]
+# Official binary: https://github.com/Psiphon-Labs/psiphon-tunnel-core
+binary = "psiphon-tunnel-core"
+# JSON the binary already understands (SponsorId, server list URLs, keys).
+# This program only overlays the method. It does not ship those values.
+base_config = "psiphon.base.json"
+data_root = "data/psiphon"
+local_socks_port = 1080
+# "", "A", "E", "D", "C", "P" or "X"
+pinned = ""
+# Hard egress filter for a single attempt. Empty = Psiphon chooses.
+egress_region = ""
+# Personal Conduit compartment id, only for method P.
+compartment_id = ""
+
+[psiphon.cleanip]
+max_ips = 400
+tls_timeout_secs = 4
+edge_timeout_secs = 20
+# How many proved addresses method E may hand to Psiphon.
+real_top = 8
+# DNS names Psiphon's fronting would dial. {n} becomes 1000, 1001, ...
+name_templates = []
+name_count = 24
+# Substrings that must appear in the edge certificate (subject or SAN).
+cert_needles = ["akamai"]
+# Optional meek Host values. If set, a silent TLS edge is dropped before E.
+meek_hosts = []
+# Psiphon fronting provider id the clean CIDRs are attached to (Akamai).
+provider_id = "BACEC04E64813F2B"
+
+[psiphon.upstream]
+# One proxy per line: http://host:port  or  socks5://user:pass@host:port
+list_file = "proxies.txt"
+# HTTPS target used by the quick test. The real test is still Psiphon itself.
+quick_host = "www.example.com"
+quick_port = 443
+quick_timeout_secs = 8
+
+[windscribe]
+# SOCKS5 that already leaves from inside Cloudflare (WARP, or a Worker).
+# The relay below does not contain a WARP key. Point this at one you run.
+socks = "127.0.0.1:40000"
+listen = "127.0.0.1:1194"
+# Servers you exported. See examples/servers.example.json.
+servers_file = "examples/servers.example.json"
+# Nearest first. The client tries the first node whose ports are filled in.
+prefer_countries = ["TR", "AE", "DE", "NL", "FR", "GB", "US"]

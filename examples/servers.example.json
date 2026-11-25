@@ -1,0 +1,15 @@
+[
+  {
+    "id": "example-ist",
+    "country": "TR",
+    "city": "Istanbul",
+    "ip": "203.0.113.10",
+    "ip2": "203.0.113.11",
+    "ip3": "203.0.113.12",
+    "wg_port": 443,
+    "ovpn_tcp": 443,
+    "ovpn_udp": 1194,
+    "stealth": 443,
+    "wstunnel": 443
+  }
+]
